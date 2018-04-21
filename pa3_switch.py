@@ -72,7 +72,7 @@ class PA3Switch(app_manager.RyuApp):
         else:
             mod = parser.OFPFlowMod(datapath=datapath, priority=priority,
                                     match=match, instructions=inst)
-         print('---------------------sending flow message --------------------')   
+        print('sending flow message')   
         datapath.send_msg(mod)
 
 
