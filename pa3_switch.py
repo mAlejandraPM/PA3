@@ -108,9 +108,10 @@ class PA3Switch(app_manager.RyuApp):
         src = eth.src
 
 		#TEST h1 to h5
-		#match = parser.OFPMatch(in_port=in_port, ipv4_dst='10.0.0.10', eth_dst=dst, eth_src=src)
+		match = parser.OFPMatch(in_port=in_port, ipv4_dst='10.0.0.10', eth_dst=dst, eth_src=src)
         #actions = [parser.OFPActionOutput('5'), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
        	#self.add_flow(datapath, 1, match, actions)
+
 
 
         dpid = datapath.id
@@ -119,6 +120,7 @@ class PA3Switch(app_manager.RyuApp):
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
 
         # learn a mac address to avoid FLOOD next time.
+        # adds the mac address to port mapping
         self.mac_to_port[dpid][src] = in_port
         print('adding {} {} {}'.format(dpid, src, in_port))
 
