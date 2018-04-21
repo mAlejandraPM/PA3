@@ -95,11 +95,9 @@ class PA3Switch(app_manager.RyuApp):
             if p.ethertype == ether_types.ETH_TYPE_ARP:
                 print('an arp packet here!')
                 if robin_value%2 ==  1:
-                	print('sending arp reply with 10.0.0.5 ')
+                	print('sending arp reply with 10.0.0.05 ')
 
-        			match = parser.OFPMatch(in_port=in_port, ipv4_dst='10.0.0.10', eth_dst=dst, eth_src=src)
-        			actions = [parser.OFPActionOutput('5')]
-        			self.add_flow(datapath, 1, match, actions)
+        			
 
 
 
@@ -108,6 +106,11 @@ class PA3Switch(app_manager.RyuApp):
             return
         dst = eth.dst
         src = eth.src
+
+		#TEST h1 to h5
+		match = parser.OFPMatch(in_port=in_port, ipv4_dst='10.0.0.10', eth_dst=dst, eth_src=src)
+        actions = [parser.OFPActionOutput('5'), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
+        self.add_flow(datapath, 1, match, actions)
 
 
         dpid = datapath.id
