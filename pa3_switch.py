@@ -116,7 +116,7 @@ class PA3Switch(app_manager.RyuApp):
         arp_reply.add_protocol(e)
         arp_reply.add_protocol(a)
         arp_reply.serialize()
-        datapath.send_msg(out)
+        datapath.send_msg(arp_reply.data)
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             # ignore lldp packet
