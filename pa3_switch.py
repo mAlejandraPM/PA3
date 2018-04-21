@@ -27,6 +27,8 @@ from ryu.lib.packet import arp
 class PA3Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
+    robin_value = 1
+
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
@@ -91,7 +93,8 @@ class PA3Switch(app_manager.RyuApp):
         for p in prots: 
             if p.ethertype == ether_types.ETH_TYPE_ARP:
                 print('an arp packet here!')
-                
+                if robin_value % 2 = 1:
+                	print('sending arp reply with 10.0.0.5 ')
 
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
@@ -108,6 +111,7 @@ class PA3Switch(app_manager.RyuApp):
 
         # learn a mac address to avoid FLOOD next time.
         self.mac_to_port[dpid][src] = in_port
+        print('dpid is {}'.format(dpid))
 
         if dst in self.mac_to_port[dpid]:
             out_port = self.mac_to_port[dpid][dst]
