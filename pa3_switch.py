@@ -97,9 +97,6 @@ class PA3Switch(app_manager.RyuApp):
                 if robin_value%2 ==  1:
                 	print('sending arp reply with 10.0.0.05 ')
 
-        			
-
-
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             # ignore lldp packet
@@ -108,7 +105,7 @@ class PA3Switch(app_manager.RyuApp):
         src = eth.src
 
 		#TEST h1 to h5
-		match = parser.OFPMatch(in_port=in_port, ipv4_dst='10.0.0.10', eth_dst=dst, eth_src=src)
+		match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst="10.0.0.10", eth_dst=dst, eth_src=src)
         #actions = [parser.OFPActionOutput('5'), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
        	#self.add_flow(datapath, 1, match, actions)
 
