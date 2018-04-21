@@ -27,6 +27,7 @@ from ryu.lib.packet import arp
 class PA3Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
+    global robin_value
     robin_value = 1
 
     def __init__(self, *args, **kwargs):
