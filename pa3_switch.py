@@ -63,7 +63,6 @@ class PA3Switch(app_manager.RyuApp):
 
         inst = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS,
                                              actions)]
-        print('added actions')
 
         if buffer_id:
             mod = parser.OFPFlowMod(datapath=datapath, buffer_id=buffer_id,
@@ -93,13 +92,30 @@ class PA3Switch(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
 
+        
+
         prots = pkt.get_protocols(ethernet.ethernet)
         for p in prots: 
             if p.ethertype == ether_types.ETH_TYPE_ARP:
                 print('an arp packet here!')
                 if robin_value%2 ==  1:
-                	print('sending arp reply with 10.0.0.05 ')
-
+                	print('sending arp reply with 10.0.0.5 ')
+                	robin_value = 2
+                else:
+                	print('sending arp reply with 10.0.0.6 ')
+                	robin_value = 2
+        
+        e = ethernet.ethernet(dst='ff:ff:ff:ff:ff:ff',
+                      src='08:60:6e:7f:74:e7',
+                      ethertype=ether.ETH_TYPE_ARP)
+        a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2,
+            src_mac='08:60:6e:7f:74:e7', src_ip='192.0.2.1',
+            dst_mac='00:00:00:00:00:00', dst_ip='192.0.2.2')
+        arp_reply = packet.Packet()
+        arp_reply.add_protocol(e)
+        arp_reply.add_protocol(a)
+        arp_reply.serialize()
+        datapath.send_msg(out)
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             # ignore lldp packet
