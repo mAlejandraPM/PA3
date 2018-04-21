@@ -115,7 +115,7 @@ class PA3Switch(app_manager.RyuApp):
         arp_reply = packet.Packet()
         arp_reply.add_protocol(e)
         arp_reply.add_protocol(a)
-        arp_reply.serialize()
+        #arp_reply.serialize()
         out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=in_port, data=arp_reply)
         datapath.send_msg(out)
 
