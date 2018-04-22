@@ -93,7 +93,13 @@ class PA3Switch(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
 
-        
+
+
+        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
+            # ignore lldp packet
+            return
+        dst = eth.dst
+        src = eth.src
 
         prots = pkt.get_protocols(ethernet.ethernet)
         for p in prots: 
@@ -101,8 +107,8 @@ class PA3Switch(app_manager.RyuApp):
                 print('an arp packet here!')
                 if robin_value%2 ==  1:
                 	print('sending arp reply with 10.0.0.5 ')
-                	e = ethernet.ethernet(dst='00:00:00:00:00:01', src='00:00:00:00:00:05', ethertype=0x0800) #ether.ETH_TYPE_ARP)
-                	a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:05', src_ip='10.0.0.10', dst_mac='00:00:00:00:00:01', dst_ip='10.0.0.1')
+                	e = ethernet.ethernet(dst=src, src='00:00:00:00:00:05', ethertype=ether.ETH_TYPE_ARP)
+                	a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:05', src_ip='10.0.0.10', dst_mac=src, dst_ip=p.src_ip)
                 	arp_reply = packet.Packet()
                 	arp_reply.add_protocol(e)
                 	arp_reply.add_protocol(a)
@@ -115,15 +121,10 @@ class PA3Switch(app_manager.RyuApp):
                 else:
                 	print('sending arp reply with 10.0.0.6 ')
                 	#robin_value = 1
-        
 
 
 
-        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
-            # ignore lldp packet
-            return
-        dst = eth.dst
-        src = eth.src
+
 
 		#TEST h1 to h5
 		#match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst="10.0.0.10")
