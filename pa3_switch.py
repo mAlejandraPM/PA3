@@ -29,11 +29,11 @@ class PA3Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
     global robin_value
-    robin_value = 1
 
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
+        robin_value = 1
 
 
 
@@ -101,6 +101,15 @@ class PA3Switch(app_manager.RyuApp):
         dst = eth.dst
         src = eth.src
 
+        # learn a mac address to avoid FLOOD next time.
+        # adds the mac address to port mapping
+        self.mac_to_port[dpid][src] = in_port
+        print('adding {} {} {}'.format(dpid, src, in_port))
+
+        dpid = datapath.id
+        self.mac_to_port.setdefault(dpid, {})
+
+
         prots = pkt.get_protocols(ethernet.ethernet)
         for p in prots: 
             if p.ethertype == ether_types.ETH_TYPE_ARP:
@@ -116,41 +125,29 @@ class PA3Switch(app_manager.RyuApp):
                 	arp_reply.add_protocol(a)
                 	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=1, actions=[], data=arp_reply)
                 	datapath.send_msg(out)
-                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=2, actions=[], data=arp_reply)
-                	datapath.send_msg(out)
-                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=3, actions=[], data=arp_reply)
-                	datapath.send_msg(out)
-                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=0, actions=[], data=arp_reply)
-                	datapath.send_msg(out)
 
+                	#install flow for traffic to h5	
+                    match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst='10.0.0.5')
+                    actions = [parser.OFPActionOutput(5), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
+                    self.add_flow(datapath, 1, match, actions)
 
-                	#robin_value = 2
+                    #install flow for traffic returning from h5
+                    match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst='10.0.0.1')
+                    actions = [parser.OFPActionOutput(1), parser.OFPActionSetField(ipv4_src='10.0.0.10')]
+                    self.add_flow(datapath, 1, match, actions)
+
+                	robin_value = 2
 
                 else:
                 	print('sending arp reply with 10.0.0.6 ')
+                	# send arp packet to 
                 	#robin_value = 1
 
 
 
-
-
-		#TEST h1 to h5
-		#match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst="10.0.0.10")
-        match = parser.OFPMatch(in_port=in_port, ipv4_dst="10.0.0.5", eth_type=ether_types.ETH_TYPE_IP)
-        actions = [parser.OFPActionOutput(5), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
-        self.add_flow(datapath, 1, match, actions)
-
-
-
-        dpid = datapath.id
-        self.mac_to_port.setdefault(dpid, {})
-
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
 
-        # learn a mac address to avoid FLOOD next time.
-        # adds the mac address to port mapping
-        self.mac_to_port[dpid][src] = in_port
-        print('adding {} {} {}'.format(dpid, src, in_port))
+        
 
         if dst in self.mac_to_port[dpid]:
             out_port = self.mac_to_port[dpid][dst]
