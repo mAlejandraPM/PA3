@@ -96,23 +96,23 @@ class PA3Switch(app_manager.RyuApp):
             return
         dst = eth.dst
         src = eth.src
-        
+
         dpid = datapath.id
         self.mac_to_port.setdefault(dpid, {})
         # learn a mac address to avoid FLOOD next time.
         # adds the mac address to port mapping
         self.mac_to_port[dpid][src] = in_port
-        print('adding {} {} {}'.format(dpid, src, in_port))
 
 
         prots = pkt.get_protocols(ethernet.ethernet)
         for p in prots: 
             if p.ethertype == ether_types.ETH_TYPE_ARP:
-                print('an arp packet here!')
+                print('ARP packet here!')
                 arp_packet = pkt.get_protocols(arp.arp)[0]
                 if robin_value%2 ==  1:
 
                     #Send ARP response matching reqwst to "next" roun robin server
+                    print('sending arp reply with 10.0.0.5')
                     e = ethernet.ethernet(dst=src, src='00:00:00:00:00:10', ethertype=ether.ETH_TYPE_ARP)
                     a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:05', src_ip=arp_packet.dst_ip, dst_mac=src, dst_ip=arp_packet.src_ip)
                     arp_reply = packet.Packet()
@@ -142,27 +142,27 @@ class PA3Switch(app_manager.RyuApp):
 
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
 
-        if dst in self.mac_to_port[dpid]:
-            out_port = self.mac_to_port[dpid][dst]
-        else:
-            out_port = ofproto.OFPP_FLOOD
+#        if dst in self.mac_to_port[dpid]:
+#            out_port = self.mac_to_port[dpid][dst]
+#        else:
+#            out_port = ofproto.OFPP_FLOOD
 
-        actions = [parser.OFPActionOutput(out_port)]
+#        actions = [parser.OFPActionOutput(out_port)]
 
         # install a flow to avoid packet_in next time
-        if out_port != ofproto.OFPP_FLOOD:
-            match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src)
+#        if out_port != ofproto.OFPP_FLOOD:
+#            match = parser.OFPMatch(in_port=in_port, eth_dst=dst, eth_src=src)
             # verify if we have a valid buffer_id, if yes avoid to send both
             # flow_mod & packet_out
-            if msg.buffer_id != ofproto.OFP_NO_BUFFER:
-                self.add_flow(datapath, 1, match, actions, msg.buffer_id)
-                return
-            else:
-                self.add_flow(datapath, 1, match, actions)
-        data = None
-        if msg.buffer_id == ofproto.OFP_NO_BUFFER:
-            data = msg.data
+#            if msg.buffer_id != ofproto.OFP_NO_BUFFER:
+#                self.add_flow(datapath, 1, match, actions, msg.buffer_id)
+#                return
+#            else:
+#                self.add_flow(datapath, 1, match, actions)
+#        data = None
+#        if msg.buffer_id == ofproto.OFP_NO_BUFFER:
+#            data = msg.data
 
-        out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
-                                  in_port=in_port, actions=actions, data=data)
-        datapath.send_msg(out)
+#        out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
+#                                  in_port=in_port, actions=actions, data=data)
+#        datapath.send_msg(out)
