@@ -34,7 +34,7 @@ class PA3Switch(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
-      
+
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
@@ -96,14 +96,13 @@ class PA3Switch(app_manager.RyuApp):
             return
         dst = eth.dst
         src = eth.src
-
-        # learn a mac address to avoid FLOOD next time.
-        # adds the mac address to port mapping
-        #self.mac_to_port[dpid][src] = in_port
-        print('adding {} {} {}'.format(dpid, src, in_port))
-
+        
         dpid = datapath.id
         self.mac_to_port.setdefault(dpid, {})
+        # learn a mac address to avoid FLOOD next time.
+        # adds the mac address to port mapping
+        self.mac_to_port[dpid][src] = in_port
+        print('adding {} {} {}'.format(dpid, src, in_port))
 
 
         prots = pkt.get_protocols(ethernet.ethernet)
