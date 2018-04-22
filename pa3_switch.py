@@ -109,7 +109,7 @@ class PA3Switch(app_manager.RyuApp):
                 if robin_value%2 ==  1:
                 	print('sending arp reply with 10.0.0.5 ')
                 	e = ethernet.ethernet(dst=src, src='00:00:00:00:00:05', ethertype=ether.ETH_TYPE_ARP)
-                	a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:05', src_ip='10.0.0.10', dst_mac=src, dst_ip=p.src_ip)
+                	a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:05', src_ip=arp_packet.dst_ip, dst_mac=src, dst_ip=arp_packet.src_ip)
                 	arp_reply = packet.Packet()
                 	arp_reply.add_protocol(e)
                 	arp_reply.add_protocol(a)
