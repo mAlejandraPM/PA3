@@ -33,7 +33,7 @@ class PA3Switch(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
-        robin_value = 1
+        self.robin_value = 1
 
 
 
@@ -93,8 +93,6 @@ class PA3Switch(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
 
-
-
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             # ignore lldp packet
             return
@@ -136,18 +134,16 @@ class PA3Switch(app_manager.RyuApp):
                     actions = [parser.OFPActionOutput(1), parser.OFPActionSetField(ipv4_src='10.0.0.10')]
                     self.add_flow(datapath, 1, match, actions)
 
-                    robin_value = 2
+                    self.robin_value = 2
 
                 else:
-                	print('sending arp reply with 10.0.0.6 ')
-                	# send arp packet to 
-                	#robin_value = 1
+                    print('sending arp reply with 10.0.0.6 ')
+                    # send arp packet to 
+                    #robin_value = 1
 
 
 
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
-
-        
 
         if dst in self.mac_to_port[dpid]:
             out_port = self.mac_to_port[dpid][dst]
