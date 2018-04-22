@@ -120,7 +120,7 @@ class PA3Switch(app_manager.RyuApp):
                 	datapath.send_msg(out)
                 	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=3, actions=[], data=arp_reply)
                 	datapath.send_msg(out)
-                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=4, actions=[], data=arp_reply)
+                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=0, actions=[], data=arp_reply)
                 	datapath.send_msg(out)
 
 
