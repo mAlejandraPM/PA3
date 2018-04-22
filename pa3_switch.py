@@ -101,10 +101,10 @@ class PA3Switch(app_manager.RyuApp):
                 print('an arp packet here!')
                 if robin_value%2 ==  1:
                 	print('sending arp reply with 10.0.0.5 ')
-                	e = ethernet.ethernet(dst='00:00:00:00:00:01', src='00:00:00:00:00:10', ethertype=0x0800) #ether.ETH_TYPE_ARP)
+                	#e = ethernet.ethernet(dst='00:00:00:00:00:01', src='00:00:00:00:00:10', ethertype=0x0800) #ether.ETH_TYPE_ARP)
                 	a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:05', src_ip='10.0.0.10', dst_mac='00:00:00:00:00:01', dst_ip='10.0.0.1')
                 	arp_reply = packet.Packet()
-                	arp_reply.add_protocol(e)
+                	#arp_reply.add_protocol(e)
                 	arp_reply.add_protocol(a)
                 	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=in_port, actions=[], data=arp_reply)
                 	datapath.send_msg(out)
