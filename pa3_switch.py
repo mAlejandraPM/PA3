@@ -106,7 +106,7 @@ class PA3Switch(app_manager.RyuApp):
                 	arp_reply = packet.Packet()
                 	arp_reply.add_protocol(e)
                 	arp_reply.add_protocol(a)
-                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=in_port, actions=[], data=arp_reply)
+                	out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=OFPP_CONTROLLER, actions=[], data=arp_reply)
                 	datapath.send_msg(out)
 
 
