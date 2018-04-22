@@ -29,11 +29,11 @@ class PA3Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
     global robin_value
+    robin_value = 1
 
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
-        self.robin_value = 1
 
 
 
