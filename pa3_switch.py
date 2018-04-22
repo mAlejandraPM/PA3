@@ -105,6 +105,7 @@ class PA3Switch(app_manager.RyuApp):
         for p in prots: 
             if p.ethertype == ether_types.ETH_TYPE_ARP:
                 print('an arp packet here!')
+                arp_packet = pkt.get_protocol(arp)
                 if robin_value%2 ==  1:
                 	print('sending arp reply with 10.0.0.5 ')
                 	e = ethernet.ethernet(dst=src, src='00:00:00:00:00:05', ethertype=ether.ETH_TYPE_ARP)
