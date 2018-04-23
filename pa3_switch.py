@@ -139,9 +139,28 @@ class PA3Switch(app_manager.RyuApp):
                     self.robin_value = 2
 
                 else:
+                	#Send ARP response matching reqwst to "next" roun robin server
                     print('sending arp reply with 10.0.0.6 ')
-                    # send arp packet to 
-                    #robin_value = 1
+                    e = ethernet.ethernet(dst=src, src='00:00:00:00:00:06', ethertype=ether.ETH_TYPE_ARP)
+                    a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac='00:00:00:00:00:06', src_ip=arp_packet.dst_ip, dst_mac=src, dst_ip=arp_packet.src_ip)
+                    arp_reply = packet.Packet()
+                    arp_reply.add_protocol(e)
+                    arp_reply.add_protocol(a)
+                    out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
+                    datapath.send_msg(out)
+
+                    #install flow for traffic to h5	
+                    match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst=arp_packet.dst_ip)
+                    actions = [parser.OFPActionOutput(6), parser.OFPActionSetField(ipv4_dst='10.0.0.6')]
+                    self.add_flow(datapath, 1, match, actions)
+
+
+                    #install flow for traffic returning from h5
+                    match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=6, ipv4_dst=arp_packet.src_ip)
+                    actions = [parser.OFPActionOutput(in_port), parser.OFPActionSetField(ipv4_src=arp_packet.dst_ip)]
+                    self.add_flow(datapath, 1, match, actions)
+
+                    self.robin_value = 1
 
 
 
