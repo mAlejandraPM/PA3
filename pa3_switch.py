@@ -111,9 +111,9 @@ class PA3Switch(app_manager.RyuApp):
                 arp_packet = pkt.get_protocols(arp.arp)[0]
                 if robin_value%2 ==  1:
 
-                	for x in self.mac_to_port:
+                    for x in self.mac_to_port:
                         for y in self.mac_to_port[x]:
-                        	print (y,':',self.mac_to_port[x][y])
+                            print (y,':',self.mac_to_port[x][y])
 
                     #Send ARP response matching reqwst to "next" roun robin server
                     print('sending arp reply with 10.0.0.5')
