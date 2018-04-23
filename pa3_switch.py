@@ -132,7 +132,7 @@ class PA3Switch(app_manager.RyuApp):
                     out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
                     datapath.send_msg(out)
 
-                    self.robin_value = 2
+                    robin_value = 2
 
                 else:
 
@@ -157,7 +157,7 @@ class PA3Switch(app_manager.RyuApp):
                     out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
                     datapath.send_msg(out)
 
-                    self.robin_value = 1
+                    robin_value = 1
 
 
 
