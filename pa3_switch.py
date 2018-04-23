@@ -107,7 +107,7 @@ class PA3Switch(app_manager.RyuApp):
             if p.ethertype == ether_types.ETH_TYPE_ARP:
                 print('ARP packet here!')
                 arp_packet = pkt.get_protocols(arp.arp)[0]
-                if robin_value%2 ==  1:
+                if self.robin_value%2 ==  1:
 
                     #install flow for traffic to h5	
                     match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst=arp_packet.dst_ip)
