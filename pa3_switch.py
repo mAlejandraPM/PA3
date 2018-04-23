@@ -111,6 +111,10 @@ class PA3Switch(app_manager.RyuApp):
                 arp_packet = pkt.get_protocols(arp.arp)[0]
                 if robin_value%2 ==  1:
 
+                	for x in self.mac_to_port:
+                        for y in self.mac_to_port[x]:
+                        	print (y,':',self.mac_to_port[x][y])
+
                     #Send ARP response matching reqwst to "next" roun robin server
                     print('sending arp reply with 10.0.0.5')
                     e = ethernet.ethernet(dst=src, src='00:00:00:00:00:05', ethertype=ether.ETH_TYPE_ARP)
@@ -123,9 +127,9 @@ class PA3Switch(app_manager.RyuApp):
 
                     #install flow for traffic to h5	
                     match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst=arp_packet.dst_ip)
-                    actions = [parser.OFPActionOutput(self.mac_to_port[dpid]['33:33:00:00:00:05']), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
+                    actions = [parser.OFPActionOutput(self.mac_to_port[dpid]['00:00:00:00:00:05']), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
                     self.add_flow(datapath, 1, match, actions)
-                    print(self.mac_to_port[dpid]['33:33:00:00:00:05'])
+                    print(self.mac_to_port[dpid]['00:00:00:00:00:05'])
 
 
                     #install flow for traffic returning from h5
