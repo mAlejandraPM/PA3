@@ -110,6 +110,7 @@ class PA3Switch(app_manager.RyuApp):
                 arp_packet = pkt.get_protocols(arp.arp)[0]
 
                 #send arp replies to identify h1-h4
+                print(arp_packet.dst_ip)
                 if arp_packet.dst_ip != '10.0.0.10':
                 	print('responding to h1-h4 ARP')
                     if arp_packet.dst_ip == '10.0.0.1':
