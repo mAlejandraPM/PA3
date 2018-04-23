@@ -128,7 +128,7 @@ class PA3Switch(app_manager.RyuApp):
                     arp_reply = packet.Packet()
                     arp_reply.add_protocol(e)
                     arp_reply.add_protocol(a)
-                    out = parser.OFPPacketOut(datapath=datapath, buffer_id=ofproto.OFP_NO_BUFFER, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
+                    out = parser.OFPPacketOut(datapath=datapath, buffer_id=ofproto.OFP_NO_BUFFER, in_port=in_port, actions=[parser.OFPActionOutput(ofproto.OFPP_IN_PORT)], data=arp_reply)
                     datapath.send_msg(out)
 
                     self.robin_value = 2
@@ -153,7 +153,7 @@ class PA3Switch(app_manager.RyuApp):
                     arp_reply = packet.Packet()
                     arp_reply.add_protocol(e)
                     arp_reply.add_protocol(a)
-                    out = parser.OFPPacketOut(datapath=datapath, buffer_id=ofproto.OFP_NO_BUFFER, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
+                    out = parser.OFPPacketOut(datapath=datapath, buffer_id=ofproto.OFP_NO_BUFFER, in_port=in_port, actions=[parser.OFPActionOutput(ofproto.OFPP_IN_PORT)], data=arp_reply)
                     datapath.send_msg(out)
 
                     self.robin_value = 1
