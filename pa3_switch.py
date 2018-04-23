@@ -125,6 +125,8 @@ class PA3Switch(app_manager.RyuApp):
                     match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=in_port, ipv4_dst=arp_packet.dst_ip)
                     actions = [parser.OFPActionOutput(in_port=self.mac_to_port[dpid]['00:00:00:00:00:05']), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
                     self.add_flow(datapath, 1, match, actions)
+                    print(self.mac_to_port[dpid]['00:00:00:00:00:05'])
+
 
                     #install flow for traffic returning from h5
                     match = parser.OFPMatch(eth_type=ether_types.ETH_TYPE_IP, in_port=self.mac_to_port[dpid]['00:00:00:00:00:05'], ipv4_dst=arp_packet.src_ip)
