@@ -112,12 +112,12 @@ class PA3Switch(app_manager.RyuApp):
                 #send arp replies to identify h1-h4
                 print(arp_packet.dst_ip)
                 if arp_packet.dst_ip != '10.0.0.10':
-                	print('responding to h1-h4 ARP')
+                    print('responding to h1-h4 ARP')
                     if arp_packet.dst_ip == '10.0.0.1':
                         foward_mac = '00:00:00:00:00:05'
 
                     if arp_packet.dst_ip == '10.0.0.2':
-                	    foward_mac = '00:00:00:00:00:02'
+                        foward_mac = '00:00:00:00:00:02'
 
                     if arp_packet.dst_ip == '10.0.0.3':
                         foward_mac = '00:00:00:00:00:03'
@@ -125,8 +125,7 @@ class PA3Switch(app_manager.RyuApp):
                     if arp_packet.dst_ip == '10.0.0.4':
                         foward_mac = '00:00:00:00:00:04'
 
-
-                	e = ethernet.ethernet(dst=src, src=arp_packet.dst, ethertype=ether.ETH_TYPE_ARP)
+                    e = ethernet.ethernet(dst=src, src=dst, ethertype=ether.ETH_TYPE_ARP)
                     a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac=foward_mac, src_ip=arp_packet.dst_ip, dst_mac=src, dst_ip=arp_packet.src_ip)
                     arp_reply = packet.Packet()
                     arp_reply.add_protocol(e)
