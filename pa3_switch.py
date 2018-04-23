@@ -100,7 +100,7 @@ class PA3Switch(app_manager.RyuApp):
         # learn a mac address to avoid FLOOD next time.
         # adds the mac address to port mapping
         self.mac_to_port[dpid][src] = in_port
-
+        self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
 
         prots = pkt.get_protocols(ethernet.ethernet)
         for p in prots: 
@@ -158,8 +158,5 @@ class PA3Switch(app_manager.RyuApp):
 
                     self.robin_value = 1
 
-
-
-        self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
         print("round robin is %s", self.robin_value)
 
