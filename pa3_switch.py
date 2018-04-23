@@ -162,5 +162,5 @@ class PA3Switch(app_manager.RyuApp):
 
 
         self.logger.info("packet in %s %s %s %s", dpid, src, dst, in_port)
-        print("round robin is %s", self.robin_value)
+        print("round robin is %s", robin_value)
 
