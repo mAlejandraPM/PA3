@@ -24,11 +24,10 @@ from ryu.lib.packet import ether_types
 from ryu.ofproto import ether
 from ryu.lib.packet import arp
 
-robin_value = 1
 
 class PA3Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
-    
+    robin_value = 1
 
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
