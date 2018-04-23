@@ -27,12 +27,12 @@ from ryu.lib.packet import arp
 
 class PA3Switch(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
-    robin_value = 1
+    global robin_value
 
     def __init__(self, *args, **kwargs):
         super(PA3Switch, self).__init__(*args, **kwargs)
         self.mac_to_port = {}
-
+        self.robin_value = 1
 
     @set_ev_cls(ofp_event.EventOFPSwitchFeatures, CONFIG_DISPATCHER)
     def switch_features_handler(self, ev):
@@ -131,7 +131,7 @@ class PA3Switch(app_manager.RyuApp):
                     out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
                     datapath.send_msg(out)
 
-                    robin_value = 2
+                    self.robin_value = 2
 
                 else:
 
@@ -156,7 +156,7 @@ class PA3Switch(app_manager.RyuApp):
                     out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id, in_port=ofproto.OFPP_IN_PORT, actions=[], data=arp_reply)
                     datapath.send_msg(out)
 
-                    robin_value = 1
+                    self.robin_value = 1
 
 
 
