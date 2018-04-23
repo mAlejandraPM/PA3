@@ -106,7 +106,34 @@ class PA3Switch(app_manager.RyuApp):
         for p in prots: 
             if p.ethertype == ether_types.ETH_TYPE_ARP:
                 print('ARP packet here!')
+
                 arp_packet = pkt.get_protocols(arp.arp)[0]
+
+                #send arp replies to identify h1-h4
+                if arp_packet.dst_ip != '10.0.0.10':
+                    if arp_packet.dst_ip == '10.0.0.1':
+                        foward_mac = '00:00:00:00:00:05'
+
+                    if arp_packet.dst_ip == '10.0.0.2':
+                	    foward_mac = '00:00:00:00:00:02'
+
+                    if arp_packet.dst_ip == '10.0.0.3':
+                        foward_mac = '00:00:00:00:00:03'
+
+                    if arp_packet.dst_ip == '10.0.0.4':
+                        foward_mac = '00:00:00:00:00:04'
+
+
+                	e = ethernet.ethernet(dst=src, src=arp_packet.dst, ethertype=ether.ETH_TYPE_ARP)
+                    a = arp.arp(hwtype=1, proto=0x0800, hlen=6, plen=4, opcode=2, src_mac=foward_mac, src_ip=arp_packet.dst_ip, dst_mac=src, dst_ip=arp_packet.src_ip)
+                    arp_reply = packet.Packet()
+                    arp_reply.add_protocol(e)
+                    arp_reply.add_protocol(a)
+                    out = parser.OFPPacketOut(datapath=datapath, buffer_id=ofproto.OFP_NO_BUFFER, in_port=in_port, actions=[parser.OFPActionOutput(ofproto.OFPP_IN_PORT)], data=arp_reply)
+                    datapath.send_msg(out)
+                    return
+
+
                 if self.robin_value%2 ==  1:
 
                     #install flow for traffic to h5	
