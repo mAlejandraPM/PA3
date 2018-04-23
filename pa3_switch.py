@@ -139,13 +139,13 @@ class PA3Switch(app_manager.RyuApp):
 
                     #install flow for traffic to h5	
                     match = parser.OFPMatch(eth_type=0x800, in_port=in_port, ipv4_dst=arp_packet.dst_ip)
-                    actions = [parser.OFPActionOutput(5), parser.OFPActionSetField(ipv4_dst='10.0.0.5')]
+                    actions = [parser.OFPActionSetField(ipv4_dst='10.0.0.5'), parser.OFPActionOutput(5)]
                     self.add_flow(datapath, 1, match, actions)
 
 
                     #install flow for traffic returning from h5
                     match = parser.OFPMatch(eth_type=0x800, in_port=5, ipv4_dst=arp_packet.src_ip)
-                    actions = [parser.OFPActionOutput(in_port), parser.OFPActionSetField(ipv4_src=arp_packet.dst_ip)]
+                    actions = [parser.OFPActionSetField(ipv4_src=arp_packet.dst_ip), parser.OFPActionOutput(in_port)]
                     self.add_flow(datapath, 1, match, actions)
 
 
@@ -165,13 +165,13 @@ class PA3Switch(app_manager.RyuApp):
 
                     #install flow for traffic to h5	
                     match = parser.OFPMatch(eth_type=0x800, in_port=in_port, ipv4_dst=arp_packet.dst_ip)
-                    actions = [parser.OFPActionOutput(6), parser.OFPActionSetField(ipv4_dst='10.0.0.6')]
+                    actions = [parser.OFPActionSetField(ipv4_dst='10.0.0.6'), parser.OFPActionOutput(6)]
                     self.add_flow(datapath, 1, match, actions)
 
 
                     #install flow for traffic returning from h5
                     match = parser.OFPMatch(eth_type=0x800, in_port=6, ipv4_dst=arp_packet.src_ip)
-                    actions = [parser.OFPActionOutput(in_port), parser.OFPActionSetField(ipv4_src=arp_packet.dst_ip)]
+                    actions = [parser.OFPActionSetField(ipv4_src=arp_packet.dst_ip), parser.OFPActionOutput(in_port)]
                     self.add_flow(datapath, 1, match, actions)
 
                     #Send ARP response matching reqwst to "next" round robin server
