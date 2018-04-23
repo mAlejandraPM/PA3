@@ -111,6 +111,7 @@ class PA3Switch(app_manager.RyuApp):
 
                 #send arp replies to identify h1-h4
                 if arp_packet.dst_ip != '10.0.0.10':
+                	print('responding to h1-h4 ARP')
                     if arp_packet.dst_ip == '10.0.0.1':
                         foward_mac = '00:00:00:00:00:05'
 
